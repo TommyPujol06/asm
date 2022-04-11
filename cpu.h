@@ -2,6 +2,10 @@
 #define __CPU_H__
 
 #include "common.h"
+#include <time.h>
+
+#include "mem.h"
+#include "regs.h"
 
 static const uint32_t CLOCK_FREQUENCY = 2000000;
 static const uint32_t TICK_TIME = 16;
@@ -30,6 +34,40 @@ static const uint8_t OPCODES_CYCLES[256] = {
 // clang-format on
 
 typedef struct {
+    reg_t* reg;
+    mem_t* mem;
+    bool halted;
+    bool interrupt;
+    uint32_t tick_cycles;
+    time_t start_tick;
 } cpu_t;
+
+uint8_t imm_ds(cpu_t* cpu);
+uint16_t imm_dw(cpu_t* cpu);
+
+uint8_t get_m(cpu_t* cpu);
+void set_m(cpu_t* cpu, uint8_t val);
+
+void stack_add(cpu_t* cpu, uint16_t val);
+uint16_t stack_pop(cpu_t* cpu);
+
+uint8_t alu_inr(cpu_t* cpu, uint8_t val);
+uint8_t alu_dcr(cpu_t* cpu, uint8_t val);
+
+void alu_daa(cpu_t* cpu);
+void alu_add(cpu_t* cpu, uint8_t val);
+void alu_adc(cpu_t* cpu, uint8_t val);
+void alu_sub(cpu_t* cpu, uint8_t val);
+void alu_sbb(cpu_t* cpu, uint8_t val);
+void alu_ana(cpu_t* cpu, uint8_t val);
+void alu_xra(cpu_t* cpu, uint8_t val);
+void alu_ora(cpu_t* cpu, uint8_t val);
+void alu_cmp(cpu_t* cpu, uint8_t val);
+
+void alu_rlc(cpu_t* cpu);
+void alu_rrc(cpu_t* cpu);
+void alu_ral(cpu_t* cpu);
+void alu_rar(cpu_t* cpu);
+void alu_dad(cpu_t* cpu, uint16_t val);
 
 #endif
