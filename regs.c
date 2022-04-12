@@ -1,5 +1,23 @@
 #include "regs.h"
 
+void init_reg(reg_t* reg)
+{
+    if (reg == NULL) {
+        return;
+    }
+
+    reg->a = 0;
+    reg->f = 0x10;
+    reg->b = 0;
+    reg->c = 0;
+    reg->d = 0;
+    reg->e = 0;
+    reg->h = 0;
+    reg->l = 0;
+    reg->sp = 0;
+    reg->pc = 0;
+}
+
 uint16_t get_reg_af(reg_t* reg)
 {
     if (reg == NULL) {

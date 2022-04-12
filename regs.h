@@ -3,6 +3,14 @@
 
 #include "common.h"
 
+// -------------
+// | A   Flags |  ---> Program Status Word
+// | B       C |  ---> B
+// | D       E |  ---> D
+// | H       L |  ---> H
+// |    SP     |  ---> Stack Pointer
+// |    PC     |  ---> Program Counter
+// -------------
 typedef struct {
     uint8_t a;
     uint8_t f; // Not available to the programmer.
@@ -23,6 +31,8 @@ typedef enum {
     P = 2, // Parity Flag
     C = 0, // Carry Flag
 } flag_t;
+
+void init_reg(reg_t* reg);
 
 // 16bit registers by pairing:
 // af,bc,de,hl

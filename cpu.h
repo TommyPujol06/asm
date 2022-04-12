@@ -42,6 +42,9 @@ typedef struct {
     time_t start_tick;
 } cpu_t;
 
+void init_cpu(cpu_t* cpu, reg_t* reg, mem_t* mem);
+uint32_t exec(cpu_t* cpu);
+
 uint8_t imm_ds(cpu_t* cpu);
 uint16_t imm_dw(cpu_t* cpu);
 
