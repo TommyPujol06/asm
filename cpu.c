@@ -672,6 +672,399 @@ uint32_t exec(cpu_t* cpu)
         break;
     case 0x7f:
         break;
+
+    // STAX
+    case 0x02:
+        set_mem(cpu->mem, get_reg_bc(cpu->reg), cpu->reg->a);
+        break;
+    case 0x12:
+        set_mem(cpu->mem, get_reg_de(cpu->reg), cpu->reg->a);
+        break;
+
+    // LDAX
+    case 0x0a:
+        cpu->reg->a = get_mem(cpu->mem, get_reg_bc(cpu->reg));
+        break;
+    case 0x1a:
+        cpu->reg->a = get_mem(cpu->mem, get_reg_de(cpu->reg));
+        break;
+
+    // ADD
+    case 0x80:
+        alu_add(cpu, cpu->reg->b);
+        break;
+    case 0x81:
+        alu_add(cpu, cpu->reg->c);
+        break;
+    case 0x82:
+        alu_add(cpu, cpu->reg->d);
+        break;
+    case 0x83:
+        alu_add(cpu, cpu->reg->e);
+        break;
+    case 0x84:
+        alu_add(cpu, cpu->reg->h);
+        break;
+    case 0x85:
+        alu_add(cpu, cpu->reg->l);
+        break;
+    case 0x86:
+        alu_add(cpu, get_m(cpu));
+        break;
+    case 0x87:
+        alu_add(cpu, cpu->reg->a);
+        break;
+
+    // ADC
+    case 0x88:
+        alu_adc(cpu, cpu->reg->b);
+        break;
+    case 0x89:
+        alu_adc(cpu, cpu->reg->c);
+        break;
+    case 0x8a:
+        alu_adc(cpu, cpu->reg->d);
+        break;
+    case 0x8b:
+        alu_adc(cpu, cpu->reg->e);
+        break;
+    case 0x8c:
+        alu_adc(cpu, cpu->reg->h);
+        break;
+    case 0x8d:
+        alu_adc(cpu, cpu->reg->l);
+        break;
+    case 0x8e:
+        alu_adc(cpu, get_m(cpu));
+        break;
+    case 0x8f:
+        alu_adc(cpu, cpu->reg->a);
+        break;
+
+    // SUB
+    case 0x90:
+        alu_sub(cpu, cpu->reg->b);
+        break;
+    case 0x91:
+        alu_sub(cpu, cpu->reg->c);
+        break;
+    case 0x92:
+        alu_sub(cpu, cpu->reg->d);
+        break;
+    case 0x93:
+        alu_sub(cpu, cpu->reg->e);
+        break;
+    case 0x94:
+        alu_sub(cpu, cpu->reg->h);
+        break;
+    case 0x95:
+        alu_sub(cpu, cpu->reg->l);
+        break;
+    case 0x96:
+        alu_sub(cpu, get_m(cpu));
+        break;
+    case 0x97:
+        alu_sub(cpu, cpu->reg->a);
+        break;
+
+    // SBB
+    case 0x98:
+        alu_sbb(cpu, cpu->reg->b);
+        break;
+    case 0x99:
+        alu_sbb(cpu, cpu->reg->c);
+        break;
+    case 0x9a:
+        alu_sbb(cpu, cpu->reg->d);
+        break;
+    case 0x9b:
+        alu_sbb(cpu, cpu->reg->e);
+        break;
+    case 0x9c:
+        alu_sbb(cpu, cpu->reg->h);
+        break;
+    case 0x9d:
+        alu_sbb(cpu, cpu->reg->l);
+        break;
+    case 0x9e:
+        alu_sbb(cpu, get_m(cpu));
+        break;
+    case 0x9f:
+        alu_sbb(cpu, cpu->reg->a);
+        break;
+
+    // ANA
+    case 0xa0:
+        alu_ana(cpu, cpu->reg->b);
+        break;
+    case 0xa1:
+        alu_ana(cpu, cpu->reg->c);
+        break;
+    case 0xa2:
+        alu_ana(cpu, cpu->reg->d);
+        break;
+    case 0xa3:
+        alu_ana(cpu, cpu->reg->e);
+        break;
+    case 0xa4:
+        alu_ana(cpu, cpu->reg->h);
+        break;
+    case 0xa5:
+        alu_ana(cpu, cpu->reg->l);
+        break;
+    case 0xa6:
+        alu_ana(cpu, get_m(cpu));
+        break;
+    case 0xa7:
+        alu_ana(cpu, cpu->reg->a);
+        break;
+
+    // XRA
+    case 0xa8:
+        alu_xra(cpu, cpu->reg->b);
+        break;
+    case 0xa9:
+        alu_xra(cpu, cpu->reg->c);
+        break;
+    case 0xaa:
+        alu_xra(cpu, cpu->reg->d);
+        break;
+    case 0xab:
+        alu_xra(cpu, cpu->reg->e);
+        break;
+    case 0xac:
+        alu_xra(cpu, cpu->reg->h);
+        break;
+    case 0xad:
+        alu_xra(cpu, cpu->reg->l);
+        break;
+    case 0xae:
+        alu_xra(cpu, get_m(cpu));
+        break;
+    case 0xaf:
+        alu_xra(cpu, cpu->reg->a);
+        break;
+
+    // ORA
+    case 0xb0:
+        alu_ora(cpu, cpu->reg->b);
+        break;
+    case 0xb1:
+        alu_ora(cpu, cpu->reg->c);
+        break;
+    case 0xb2:
+        alu_ora(cpu, cpu->reg->d);
+        break;
+    case 0xb3:
+        alu_ora(cpu, cpu->reg->e);
+        break;
+    case 0xb4:
+        alu_ora(cpu, cpu->reg->h);
+        break;
+    case 0xb5:
+        alu_ora(cpu, cpu->reg->l);
+        break;
+    case 0xb6:
+        alu_ora(cpu, get_m(cpu));
+        break;
+    case 0xb7:
+        alu_ora(cpu, cpu->reg->a);
+        break;
+
+    // CMP
+    case 0xb8:
+        alu_cmp(cpu, cpu->reg->b);
+        break;
+    case 0xb9:
+        alu_cmp(cpu, cpu->reg->c);
+        break;
+    case 0xba:
+        alu_cmp(cpu, cpu->reg->d);
+        break;
+    case 0xbb:
+        alu_cmp(cpu, cpu->reg->e);
+        break;
+    case 0xbc:
+        alu_cmp(cpu, cpu->reg->h);
+        break;
+    case 0xbd:
+        alu_cmp(cpu, cpu->reg->l);
+        break;
+    case 0xbe:
+        alu_cmp(cpu, get_m(cpu));
+        break;
+    case 0xbf:
+        alu_cmp(cpu, cpu->reg->a);
+        break;
+
+    // RLC
+    case 0x07:
+        alu_rlc(cpu);
+        break;
+
+    // RRC
+    case 0x0f:
+        alu_rrc(cpu);
+        break;
+
+    // RAL
+    case 0x17:
+        alu_ral(cpu);
+        break;
+
+    // RAR
+    case 0x1f:
+        alu_rar(cpu);
+        break;
+
+    // PUSH
+    case 0xc5:
+        stack_add(cpu, get_reg_bc(cpu->reg));
+        break;
+    case 0xd5:
+        stack_add(cpu, get_reg_de(cpu->reg));
+        break;
+    case 0xe5:
+        stack_add(cpu, get_reg_hl(cpu->reg));
+        break;
+    case 0xf5:
+        stack_add(cpu, get_reg_af(cpu->reg));
+        break;
+
+    // POP Pop Data Off Stack
+    case 0xc1: {
+        uint16_t val = stack_pop(cpu);
+        set_reg_bc(cpu->reg, val);
+        break;
+    }
+    case 0xd1: {
+        uint16_t val = stack_pop(cpu);
+        set_reg_de(cpu->reg, val);
+        break;
+    }
+    case 0xe1: {
+        uint16_t val = stack_pop(cpu);
+        set_reg_hl(cpu->reg, val);
+        break;
+    }
+    case 0xf1: {
+        uint16_t val = stack_pop(cpu);
+        set_reg_af(cpu->reg, val);
+        break;
+    }
+
+    // DAD
+    case 0x09:
+        alu_dad(cpu, get_reg_bc(cpu->reg));
+        break;
+    case 0x19:
+        alu_dad(cpu, get_reg_de(cpu->reg));
+        break;
+    case 0x29:
+        alu_dad(cpu, get_reg_hl(cpu->reg));
+        break;
+    case 0x39:
+        alu_dad(cpu, cpu->reg->sp);
+        break;
+
+    // INX
+    case 0x03:
+        set_reg_bc(cpu->reg, get_reg_bc(cpu->reg) + 1);
+        break;
+    case 0x13:
+        set_reg_de(cpu->reg, get_reg_de(cpu->reg) + 1);
+        break;
+    case 0x23:
+        set_reg_hl(cpu->reg, get_reg_hl(cpu->reg) + 1);
+        break;
+    case 0x33:
+        cpu->reg->sp = cpu->reg->sp + 1;
+        break;
+
+    // DCX
+    case 0x0b:
+        set_reg_bc(cpu->reg, get_reg_bc(cpu->reg) - 1);
+        break;
+    case 0x1b:
+        set_reg_de(cpu->reg, get_reg_de(cpu->reg) - 1);
+        break;
+    case 0x2b:
+        set_reg_hl(cpu->reg, get_reg_hl(cpu->reg) - 1);
+        break;
+    case 0x3b:
+        cpu->reg->sp = cpu->reg->sp - 1;
+        break;
+
+    // XCHG
+    case 0xeb: {
+        swap(&cpu->reg->h, &cpu->reg->d);
+        swap(&cpu->reg->l, &cpu->reg->e);
+        break;
+    }
+
+    // XTHL
+    case 0xe3: {
+        uint16_t val = get_mem_word(cpu->mem, cpu->reg->sp);
+        uint16_t b = get_reg_hl(cpu->reg);
+        set_reg_hl(cpu->reg, val);
+        set_mem_word(cpu->mem, cpu->reg->sp, b);
+        break;
+    }
+
+    // SPHL
+    case 0xf9:
+        cpu->reg->sp = get_reg_hl(cpu->reg);
+        break;
+
+    // LXI
+    case 0x01: {
+        uint16_t val = imm_dw(cpu);
+        set_reg_bc(cpu->reg, val);
+        break;
+    }
+    case 0x11: {
+        uint16_t val = imm_dw(cpu);
+        set_reg_de(cpu->reg, val);
+        break;
+    }
+    case 0x21: {
+        uint16_t val = imm_dw(cpu);
+        set_reg_hl(cpu->reg, val);
+        break;
+    }
+    case 0x31: {
+        uint16_t val = imm_dw(cpu);
+        cpu->reg->sp = val;
+        break;
+    }
+
+    // MVI
+    case 0x06:
+        cpu->reg->b = imm_ds(cpu);
+        break;
+    case 0x0e:
+        cpu->reg->c = imm_ds(cpu);
+        break;
+    case 0x16:
+        cpu->reg->d = imm_ds(cpu);
+        break;
+    case 0x1e:
+        cpu->reg->e = imm_ds(cpu);
+        break;
+    case 0x26:
+        cpu->reg->h = imm_ds(cpu);
+        break;
+    case 0x2e:
+        cpu->reg->l = imm_ds(cpu);
+        break;
+    case 0x36: {
+        uint8_t val = imm_ds(cpu);
+        set_m(cpu, val);
+        break;
+    }
+    case 0x3e:
+        cpu->reg->a = imm_ds(cpu);
+        break;
     }
 
     return OPCODES_CYCLES[opcode] + cycle;
