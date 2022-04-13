@@ -27,10 +27,11 @@ static inline bool parity(uint8_t val)
         set_reg_flag(cpu->reg, P, parity(res));                \
     }
 
-void swap(uint8_t* a, uint8_t* b)
+static inline void swap_mem(uint8_t* a, uint8_t* b)
 {
     uint8_t temp = *a;
     *a = *b;
     *b = temp;
 }
+
 #endif

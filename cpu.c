@@ -997,8 +997,8 @@ uint32_t exec(cpu_t* cpu)
 
     // XCHG
     case 0xeb: {
-        swap(&cpu->reg->h, &cpu->reg->d);
-        swap(&cpu->reg->l, &cpu->reg->e);
+        swap_mem(&cpu->reg->h, &cpu->reg->d);
+        swap_mem(&cpu->reg->l, &cpu->reg->e);
         break;
     }
 
