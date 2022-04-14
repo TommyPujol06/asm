@@ -1,5 +1,7 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#define DEBUG 1
 
 #include "cpu.h"
 #include "mem.h"

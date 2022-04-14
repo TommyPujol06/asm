@@ -11,7 +11,6 @@ void init_cpu(cpu_t* cpu, reg_t* reg, mem_t* mem)
     cpu->halted = false;
     cpu->interrupt = false;
     cpu->tick_cycles = 0;
-    cpu->start_tick = time(0);
 }
 
 uint8_t imm_ds(cpu_t* cpu)
@@ -1065,7 +1064,310 @@ uint32_t exec(cpu_t* cpu)
     case 0x3e:
         cpu->reg->a = imm_ds(cpu);
         break;
+
+    // ADI
+    case 0xc6: {
+        uint8_t val = imm_ds(cpu);
+        alu_add(cpu, val);
+        break;
+    }
+
+    // ACI
+    case 0xce: {
+        uint8_t val = imm_ds(cpu);
+        alu_adc(cpu, val);
+        break;
+    }
+
+    // SUI
+    case 0xd6: {
+        uint8_t val = imm_ds(cpu);
+        alu_sub(cpu, val);
+        break;
+    }
+
+    // SBI
+    case 0xde: {
+        uint8_t val = imm_ds(cpu);
+        alu_sbb(cpu, val);
+        break;
+    }
+
+    // ANI
+    case 0xe6: {
+        uint8_t val = imm_ds(cpu);
+        alu_ana(cpu, val);
+        break;
+    }
+
+    // XRI
+    case 0xee: {
+        uint8_t val = imm_ds(cpu);
+        alu_xra(cpu, val);
+        break;
+    }
+
+    // ORI
+    case 0xf6: {
+        uint8_t val = imm_ds(cpu);
+        alu_ora(cpu, val);
+        break;
+    }
+
+    // CPI
+    case 0xfe: {
+        uint8_t val = imm_ds(cpu);
+        alu_cmp(cpu, val);
+        break;
+    }
+
+    // STA
+    case 0x32: {
+        uint16_t addr = imm_dw(cpu);
+        set_mem(cpu->mem, addr, cpu->reg->a);
+        break;
+    }
+
+    // LDA
+    case 0x3a: {
+        uint16_t addr = imm_dw(cpu);
+        uint8_t val = get_mem(cpu->mem, addr);
+        cpu->reg->a = val;
+        break;
+    }
+
+    // SHLD
+    case 0x22: {
+        uint16_t addr = imm_dw(cpu);
+        set_mem_word(cpu->mem, addr, get_reg_hl(cpu->reg));
+        break;
+    }
+
+    // LHLD
+    case 0x2a: {
+        uint16_t addr = imm_dw(cpu);
+        uint8_t val = get_mem_word(cpu->mem, addr);
+        set_reg_hl(cpu->reg, val);
+        break;
+    }
+
+    // PCHL
+    case 0xe9:
+        cpu->reg->pc = get_reg_hl(cpu->reg);
+        break;
+
+    // JUMP
+    case 0xc3:
+    case 0xda:
+    case 0xd2:
+    case 0xca:
+    case 0xc2:
+    case 0xfa:
+    case 0xf2:
+    case 0xea:
+    case 0xe2: {
+        uint8_t addr = imm_dw(cpu);
+        bool condition = false;
+        switch (opcode) {
+        case 0xc3: // JMP
+            condition = true;
+            break;
+        case 0xda: // JC
+            condition = get_reg_flag(cpu->reg, C);
+            break;
+        case 0xd2: // JNC
+            condition = !get_reg_flag(cpu->reg, C);
+            break;
+        case 0xca: // JZ
+            condition = get_reg_flag(cpu->reg, Z);
+            break;
+        case 0xc2: // JNZ
+            condition = !get_reg_flag(cpu->reg, Z);
+            break;
+        case 0xfa: // JM
+            condition = get_reg_flag(cpu->reg, S);
+            break;
+        case 0xf2: // JP
+            condition = !get_reg_flag(cpu->reg, S);
+            break;
+        case 0xea: // JPE
+            condition = get_reg_flag(cpu->reg, P);
+            break;
+        case 0xe2: // JPO
+            condition = !get_reg_flag(cpu->reg, P);
+            break;
+        }
+
+        if (condition) {
+            cpu->reg->pc = addr;
+        }
+
+        break;
+    }
+
+    // CALL
+    case 0xcd:
+    case 0xdc:
+    case 0xd4:
+    case 0xcc:
+    case 0xc4:
+    case 0xfc:
+    case 0xf4:
+    case 0xec:
+    case 0xe4: {
+        uint16_t val = imm_dw(cpu);
+        bool condition = false;
+        switch (opcode) {
+        case 0xcd: // CALL
+            condition = true;
+            break;
+        case 0xdc: // CC
+            condition = get_reg_flag(cpu->reg, C);
+            break;
+        case 0xd4: // CNC
+            condition = !get_reg_flag(cpu->reg, C);
+            break;
+        case 0xcc: // CZ
+            condition = get_reg_flag(cpu->reg, Z);
+            break;
+        case 0xc4: // CNZ
+            condition = !get_reg_flag(cpu->reg, Z);
+            break;
+        case 0xfc: // CM
+            condition = get_reg_flag(cpu->reg, S);
+            break;
+        case 0xf4: // CP
+            condition = !get_reg_flag(cpu->reg, S);
+            break;
+        case 0xec: // CPE
+            condition = get_reg_flag(cpu->reg, P);
+            break;
+        case 0xe4: // CPO
+            condition = !get_reg_flag(cpu->reg, P);
+            break;
+        }
+
+        if (condition) {
+            cycle = 6;
+            stack_add(cpu, cpu->reg->pc);
+            cpu->reg->pc = val;
+        }
+
+        break;
+    }
+
+    // RET
+    case 0xc9:
+    case 0xd8:
+    case 0xd0:
+    case 0xc8:
+    case 0xc0:
+    case 0xf8:
+    case 0xf0:
+    case 0xe8:
+    case 0xe0: {
+        bool condition = false;
+        switch (opcode) {
+        case 0xc9: // RET
+            condition = true;
+            break;
+        case 0xd8: // RC
+            condition = get_reg_flag(cpu->reg, C);
+            break;
+        case 0xd0: // RNC
+            condition = !get_reg_flag(cpu->reg, C);
+            break;
+        case 0xc8: // RZ
+            condition = get_reg_flag(cpu->reg, Z);
+            break;
+        case 0xc0: // RNZ
+            condition = !get_reg_flag(cpu->reg, Z);
+            break;
+        case 0xf8: // RM
+            condition = get_reg_flag(cpu->reg, S);
+            break;
+        case 0xf0: // RP
+            condition = !get_reg_flag(cpu->reg, S);
+            break;
+        case 0xe8: // RPE
+            condition = get_reg_flag(cpu->reg, P);
+            break;
+        case 0xe0: // RPO
+            condition = !get_reg_flag(cpu->reg, P);
+            break;
+        }
+
+        if (condition) {
+            cycle = 6;
+            cpu->reg->pc = stack_pop(cpu);
+        }
+
+        break;
+    }
+
+    // RST
+    case 0xc7:
+    case 0xcf:
+    case 0xd7:
+    case 0xdf:
+    case 0xe7:
+    case 0xef:
+    case 0xf7:
+    case 0xff: {
+        stack_add(cpu, cpu->reg->pc);
+        cpu->reg->pc = (uint16_t)(opcode & 0x38);
+		break;
+    }
+
+    // Interrupts
+    case 0xfb:
+        cpu->interrupt = true;
+        break;
+    case 0xf3:
+        cpu->interrupt = false;
+        break;
+
+    // I/O - TBD
+    case 0xdb:
+        // port_in()
+        break;
+    case 0xd3:
+        // port_out()
+        break;
+
+    // HLT
+    case 0x76:
+        cpu->halted = true;
+        break;
+
+    default:
+        break;
     }
 
     return OPCODES_CYCLES[opcode] + cycle;
+}
+
+uint32_t step(cpu_t* cpu)
+{
+    if (cpu == NULL) {
+        return 0;
+    }
+
+    uint32_t cycles = exec(cpu);
+    cpu->tick_cycles += cycles;
+    return cycles;
+}
+
+void handle_interrupt(cpu_t* cpu, uint16_t addr)
+{
+    if (cpu == NULL) {
+        return;
+    }
+
+    if (cpu->interrupt) {
+        cpu->interrupt = false;
+        stack_add(cpu, cpu->reg->pc);
+        cpu->reg->pc = addr;
+        cpu->tick_cycles += OPCODES_CYCLES[0xcd];
+    }
 }

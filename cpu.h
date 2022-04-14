@@ -2,7 +2,6 @@
 #define __CPU_H__
 
 #include "common.h"
-#include <time.h>
 
 #include "mem.h"
 #include "regs.h"
@@ -39,11 +38,13 @@ typedef struct {
     bool halted;
     bool interrupt;
     uint32_t tick_cycles;
-    time_t start_tick;
 } cpu_t;
 
 void init_cpu(cpu_t* cpu, reg_t* reg, mem_t* mem);
+
 uint32_t exec(cpu_t* cpu);
+uint32_t step(cpu_t* cpu);
+void handle_interrupt(cpu_t* cpu, uint16_t addr);
 
 uint8_t imm_ds(cpu_t* cpu);
 uint16_t imm_dw(cpu_t* cpu);

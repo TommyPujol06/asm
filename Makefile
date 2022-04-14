@@ -1,7 +1,7 @@
 bin = emu
 src = $(wildcard *.c)
 obj = $(src:.c=.o)
-CFLAGS = -g -Wall -Wextra
+CFLAGS = -g -Wall -Wextra -O3
 LDFLAGS =
 
 .PHONY: all clean
